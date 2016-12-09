@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.accessibility.TalkBackHelper;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 
@@ -36,7 +37,12 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
         dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
         dollarFormatWithPlus.setPositivePrefix("+$");
+        /*
+        By Breno Marques on 08/12/2016.
+        Locale.getDefault () does not work with languages that require RTL Layout Support
         percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
+        */
+        percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.US);
         percentageFormat.setMaximumFractionDigits(2);
         percentageFormat.setMinimumFractionDigits(2);
         percentageFormat.setPositivePrefix("+");
@@ -66,29 +72,28 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         cursor.moveToPosition(position);
 
-
-        holder.symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
-        holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
-
-
+        String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL).toUpperCase(Locale.getDefault());
+        String strPrice = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
         float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
         float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
 
-        if (rawAbsoluteChange > 0) {
+        boolean isChangeHigh = rawAbsoluteChange > 0.00;
+        String strChange = PrefUtils.getDisplayMode(context).equals(context.getString(R.string.pref_display_mode_absolute_key)) ? dollarFormatWithPlus.format(rawAbsoluteChange) : percentageFormat.format(percentageChange / 100);
+
+        holder.symbol.setText(symbol);
+        holder.price.setText(strPrice);
+        holder.change.setText(strChange);
+
+        if (isChangeHigh) {
             holder.change.setBackgroundResource(R.drawable.percent_change_pill_green);
         } else {
             holder.change.setBackgroundResource(R.drawable.percent_change_pill_red);
         }
-
-        String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-        String percentage = percentageFormat.format(percentageChange / 100);
-
-        if (PrefUtils.getDisplayMode(context)
-                .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
-            holder.change.setText(change);
-        } else {
-            holder.change.setText(percentage);
-        }
+        /*
+         By Breno Marques on 08/12/2016.
+         Do Speak the Stock when TalkBack is enabled.
+        */
+        holder.itemView.setContentDescription(TalkBackHelper.getTalkStockDescription(this.context, symbol, strPrice, strChange, isChangeHigh  ));
 
 
     }

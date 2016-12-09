@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.accessibility.TalkBackHelper;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
@@ -159,12 +160,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     private void setDisplayModeMenuItemIcon(MenuItem item) {
-        if (PrefUtils.getDisplayMode(this)
-                .equals(getString(R.string.pref_display_mode_absolute_key))) {
+        String displayModeStatus = PrefUtils.getDisplayMode(this);
+        if (displayModeStatus.equals(getString(R.string.pref_display_mode_absolute_key))) {
             item.setIcon(R.drawable.ic_percentage);
         } else {
             item.setIcon(R.drawable.ic_dollar);
         }
+        /*
+        By Breno Marques on 08/12/2016.
+        Do Speak the display mode status when TalkBack is enabled.
+         */
+        TalkBackHelper.talkDisplayModeStatus(this.getBaseContext(), displayModeStatus);
     }
 
     @Override
