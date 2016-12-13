@@ -9,6 +9,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.Date;
+import java.util.List;
+
+import au.com.bytecode.opencsv.CSVReader;
+
 
 public class StockProvider extends ContentProvider {
 
@@ -176,4 +184,31 @@ public class StockProvider extends ContentProvider {
 
 
     }
+
+    /**
+     * Represents a dimension history item
+     * By Breno Marques on 12/13/2016.
+     */
+    public static class QuoteHistory {
+        public Date date;
+        public float quoteClose;
+
+        public QuoteHistory(String[] quoteHistoryCols ){
+            this.date = new Date(Long.parseLong(quoteHistoryCols[Contract.Quote.POSITION_HISTORY_DATE]));
+            this.quoteClose = Float.parseFloat(quoteHistoryCols[Contract.Quote.POSITION_HISTORY_CLOSE]);
+        }
+    }
+
+    /**
+     * Returns with a text list to retrieve a {@see QuoteHistory}
+     * @param stringHistory Inform text in CSV format.
+     * @return
+     * @throws IOException
+     */
+    public static List<String[]> getQuoteHistories(String stringHistory) throws IOException {
+        StringReader stringReader = new StringReader(stringHistory);
+        CSVReader csvReader = new CSVReader(stringReader,',');
+        return csvReader.readAll();
+    }
+
 }

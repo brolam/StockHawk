@@ -1,0 +1,4 @@
+<resources>
+    <!--Stock item for RTL Layout Support-->
+    <item name="rtl_layout_support" type="bool">true</item>
+</resources>

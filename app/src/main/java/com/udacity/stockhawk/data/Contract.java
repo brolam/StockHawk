@@ -33,6 +33,11 @@ public class Contract {
         public static final int POSITION_PERCENTAGE_CHANGE = 4;
         public static final int POSITION_HISTORY = 5;
 
+        public static final int POSITION_HISTORY_DATE = 0;
+        public static final int POSITION_HISTORY_CLOSE = 1;
+
+
+
         public static final String[] QUOTE_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
@@ -41,6 +46,7 @@ public class Contract {
                 COLUMN_PERCENTAGE_CHANGE,
                 COLUMN_HISTORY
         };
+
 
         public static Uri makeUriForStock(String symbol) {
             return uri.buildUpon().appendPath(symbol).build();
@@ -52,5 +58,4 @@ public class Contract {
 
 
     }
-
 }

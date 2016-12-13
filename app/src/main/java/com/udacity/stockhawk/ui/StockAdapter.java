@@ -7,45 +7,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.udacity.stockhawk.R;
-import com.udacity.stockhawk.accessibility.TalkBackHelper;
 import com.udacity.stockhawk.data.Contract;
-import com.udacity.stockhawk.data.PrefUtils;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
+class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockItemViewHolder> {
 
     final private Context context;
-    final private DecimalFormat dollarFormatWithPlus;
-    final private DecimalFormat dollarFormat;
-    final private DecimalFormat percentageFormat;
     private Cursor cursor;
     private StockAdapterOnClickHandler clickHandler;
 
     StockAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
-
-        dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        dollarFormatWithPlus.setPositivePrefix("+$");
-        /*
-        By Breno Marques on 08/12/2016.
-        Locale.getDefault () does not work with languages that require RTL Layout Support
-        percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
-        */
-        percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.US);
-        percentageFormat.setMaximumFractionDigits(2);
-        percentageFormat.setMinimumFractionDigits(2);
-        percentageFormat.setPositivePrefix("+");
     }
 
     void setCursor(Cursor cursor) {
@@ -60,42 +33,16 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
     }
 
     @Override
-    public StockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StockItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View item = LayoutInflater.from(context).inflate(R.layout.list_item_quote, parent, false);
-
-        return new StockViewHolder(item);
+        return new StockItemViewHolder(item);
     }
 
     @Override
-    public void onBindViewHolder(StockViewHolder holder, int position) {
-
+    public void onBindViewHolder(StockItemViewHolder holder, int position) {
         cursor.moveToPosition(position);
-
-        String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL).toUpperCase(Locale.getDefault());
-        String strPrice = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
-        float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
-        float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
-
-        boolean isChangeHigh = rawAbsoluteChange > 0.00;
-        String strChange = PrefUtils.getDisplayMode(context).equals(context.getString(R.string.pref_display_mode_absolute_key)) ? dollarFormatWithPlus.format(rawAbsoluteChange) : percentageFormat.format(percentageChange / 100);
-
-        holder.symbol.setText(symbol);
-        holder.price.setText(strPrice);
-        holder.change.setText(strChange);
-
-        if (isChangeHigh) {
-            holder.change.setBackgroundResource(R.drawable.percent_change_pill_green);
-        } else {
-            holder.change.setBackgroundResource(R.drawable.percent_change_pill_red);
-        }
-        /*
-         By Breno Marques on 08/12/2016.
-         Do Speak the Stock when TalkBack is enabled.
-        */
-        holder.itemView.setContentDescription(TalkBackHelper.getTalkStockDescription(this.context, symbol, strPrice, strChange, isChangeHigh  ));
-
-
+        holder.onBind(this.context, cursor);
     }
 
     @Override
@@ -112,20 +59,10 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         void onClick(String symbol);
     }
 
-    class StockViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class StockItemViewHolder extends StockItemView implements View.OnClickListener {
 
-        @BindView(R.id.symbol)
-        TextView symbol;
-
-        @BindView(R.id.price)
-        TextView price;
-
-        @BindView(R.id.change)
-        TextView change;
-
-        StockViewHolder(View itemView) {
+        StockItemViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

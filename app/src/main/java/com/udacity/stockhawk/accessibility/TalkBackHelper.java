@@ -54,4 +54,16 @@ public class TalkBackHelper {
             return null;
         }
     }
+
+    /**
+     * Get the ContentDescription from Stock Chart History
+     * @param context Inform a valid context
+     * @param strMinDate Inform a text date min formatted.
+     * @param strMaxDate Inform a text date max formatted.
+     * @return
+     */
+    public static String getTalkStockChartHistory(Context context, String strMinDate, String strMaxDate){
+        return context.getString(R.string.a11y_stock_detail_activity_line_chart, strMinDate, strMaxDate);
+    }
+
 }

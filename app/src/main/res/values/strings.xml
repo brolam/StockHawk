@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Stock Hawk</string>
+    <string name="stock_detail_activity_title">Stock Hawk History</string>
 
     <string name="pref_stocks_initialized_key" translatable="false">initialized</string>
 
@@ -32,6 +33,7 @@
     <string name="error_stock_not_found">Symbol %s is invalid!</string>
     <string name="error_no_network">No network connectivity! Will load stock cursor when the network is available.</string>
     <string name="error_no_stocks">No stocks added! Hit the floating action button to add one.</string>
+    <string name="error_no_load_quote_history">Could not load quote history.</string>
 
     <string name="toast_stock_added_no_connectivity">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity">Will refresh when network available.</string>
@@ -42,5 +44,8 @@
     <string name="a11y_stock_display_mode_status" formatted="false">Showing oscillation in %s</string>
     <string name="a11y_stock_description_high" formatted="false">%s %s with a high oscillation of %s </string>
     <string name="a11y_stock_description_low" formatted="false">%s %s low oscillation of %s </string>
+    <string name="a11y_stock_detail_activity_line_chart" formatted="false">Chart quote history between %s and %s</string>
+
+
 
 </resources>
