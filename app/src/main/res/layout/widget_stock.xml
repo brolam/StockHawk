@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:padding="@dimen/widget_margin"
+    android:orientation="vertical"
+    android:contentDescription="@string/a11y_stock_hawk_widget_quotes">
+
+    <ListView
+        android:id="@+id/listViewQuotes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/black"
+         />
+
+    <TextView
+        android:id="@+id/listViewQuotesEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/error_no_network"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:visibility="gone"
+        android:background="@android:color/black"/>
+
+
+</LinearLayout>

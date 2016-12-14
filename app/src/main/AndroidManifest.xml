@@ -23,8 +23,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.StockDetailActivity"
-            android:label="@string/stock_detail_activity_title" >
+        <activity
+            android:name=".ui.StockDetailActivity"
+            android:label="@string/stock_detail_activity_title">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.StockDetailActivity" />
         </activity>
 
         <service
@@ -34,13 +38,30 @@
         <provider
             android:name=".data.StockProvider"
             android:authorities="com.udacity.stockhawk"
-            android:exported="false" />
+            android:exported="true" />
 
         <service
             android:name=".sync.QuoteJobService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".ui.widget.StockWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.udacity.stockhawk.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_stock_info" />
+        </receiver>
+
+        <service
+            android:name="com.udacity.stockhawk.ui.widget.StockWidgetRVS"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
     </application>
 
 </manifest>
