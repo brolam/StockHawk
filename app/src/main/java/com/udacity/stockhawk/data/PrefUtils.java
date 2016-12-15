@@ -1,16 +1,19 @@
 package com.udacity.stockhawk.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.sync.QuoteSyncJob;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class PrefUtils {
+    public static final String PREFERENCES_UPDATED = "com.udacity.stockhawk.PREFERENCES_UPDATED";
 
     private PrefUtils() {
     }
@@ -58,7 +61,12 @@ public final class PrefUtils {
     }
 
     public static void removeStock(Context context, String symbol) {
+        //When remove a symbol it is necessary to delete the symbol in the database too!
+        //By Breno Marques in 15/12/2016
+        context.getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
         editStockPref(context, symbol, false);
+        Intent dataUpdatedIntent = new Intent(QuoteSyncJob.ACTION_DATA_UPDATED);
+        context.sendBroadcast(dataUpdatedIntent);
     }
 
     public static String getDisplayMode(Context context) {
@@ -86,6 +94,9 @@ public final class PrefUtils {
         }
 
         editor.apply();
+
+        Intent dataUpdatedIntent = new Intent(PREFERENCES_UPDATED);
+        context.sendBroadcast(dataUpdatedIntent);
     }
 
 }

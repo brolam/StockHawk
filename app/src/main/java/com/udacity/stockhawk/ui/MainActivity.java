@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         StockAdapter.StockAdapterOnClickHandler {
 
     private static final int STOCK_LOADER = 0;
+    private static final String ADD_STOCK_DIALOG_TAG = "StockDialogFragment";
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.fab)
@@ -47,10 +48,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private StockAdapter adapter;
 
     @Override
-    public void onClick(String symbol) {
-        Intent intent = new Intent(this,StockDetailActivity.class);
-        intent.putExtra(StockDetailActivity.PARAM_SYMBOL, symbol);
-        this.startActivity(intent);
+    public void onClick(String symbol, boolean isValid) {
+        if ( isValid) {
+            Intent intent = new Intent(this, StockDetailActivity.class);
+            intent.putExtra(StockDetailActivity.PARAM_SYMBOL, symbol);
+            this.startActivity(intent);
+        } else {
+            new AddStockDialog().show(getFragmentManager(), ADD_STOCK_DIALOG_TAG, symbol);
+            PrefUtils.removeStock(this, symbol);
+        }
         Timber.d("Symbol clicked: %s", symbol);
 
     }
@@ -83,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
                 PrefUtils.removeStock(MainActivity.this, symbol);
-                getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(recyclerView);
 
@@ -120,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void button(View view) {
-        new AddStockDialog().show(getFragmentManager(), "StockDialogFragment");
+        new AddStockDialog().show(getFragmentManager(), ADD_STOCK_DIALOG_TAG);
     }
 
     void addStock(String symbol) {

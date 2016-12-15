@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.ui.StockDetailActivity;
 
@@ -48,7 +49,8 @@ public class StockWidget extends AppWidgetProvider  {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        if (QuoteSyncJob.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+        if ((QuoteSyncJob.ACTION_DATA_UPDATED.equals(intent.getAction())) ||
+                PrefUtils.PREFERENCES_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));

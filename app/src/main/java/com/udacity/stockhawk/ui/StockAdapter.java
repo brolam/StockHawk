@@ -56,7 +56,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockItemViewHolder
 
 
     interface StockAdapterOnClickHandler {
-        void onClick(String symbol);
+        void onClick(String symbol, boolean isValid);
     }
 
     class StockItemViewHolder extends StockItemView implements View.OnClickListener {
@@ -70,8 +70,8 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockItemViewHolder
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             cursor.moveToPosition(adapterPosition);
-            int symbolColumn = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
-            clickHandler.onClick(cursor.getString(symbolColumn));
+            QuoteContent quoteContent = new QuoteContent(this.itemView.getContext(), cursor);
+            clickHandler.onClick(quoteContent.symbol, quoteContent.isValid);
 
         }
 

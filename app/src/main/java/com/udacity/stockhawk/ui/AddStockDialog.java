@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -24,6 +25,8 @@ public class AddStockDialog extends DialogFragment {
     @BindView(R.id.dialog_stock)
     EditText stock;
 
+    String symbol = "";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -33,6 +36,8 @@ public class AddStockDialog extends DialogFragment {
         View custom = inflater.inflate(R.layout.add_stock_dialog, null);
 
         ButterKnife.bind(this, custom);
+
+        this.stock.setText(symbol);
 
         stock.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -63,6 +68,11 @@ public class AddStockDialog extends DialogFragment {
             ((MainActivity) parent).addStock(stock.getText().toString());
         }
         dismissAllowingStateLoss();
+    }
+
+    public void show(FragmentManager manager, String tag, String symbol) {
+        this.symbol = symbol;
+        this.show(manager,tag);
     }
 
 

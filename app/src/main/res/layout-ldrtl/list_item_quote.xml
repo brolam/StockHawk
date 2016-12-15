@@ -19,6 +19,7 @@
         tools:text="GOOG" />
 
     <LinearLayout
+        android:id="@+id/linearLayoutQuoteValues"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -43,4 +44,12 @@
             android:paddingRight="3dp"
             tools:text="100%" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/error"
+        style="@style/BidPriceTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10sp"
+        android:layout_marginLeft="10sp"
+        tools:text="Error" />
 </LinearLayout>
